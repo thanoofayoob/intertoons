@@ -58,7 +58,11 @@ class Categorywise extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: data!.childData!.isEmpty
-          ? const Center(child: Icon(Icons.no_food))
+          ? const Center(
+              child: Icon(
+              Icons.hourglass_empty_sharp,
+              size: 25,
+            ))
           : ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),

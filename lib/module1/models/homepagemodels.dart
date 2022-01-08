@@ -90,23 +90,24 @@ class Banner {
 }
 
 class BestsellerProduct {
-  BestsellerProduct({
-    this.id,
-    this.name,
-    this.sku,
-    this.categoryId,
-    this.categoryName,
-    this.isVeg,
-    this.menuStatus,
-    this.description,
-    this.price,
-    this.specialPrice,
-    this.availableFrom,
-    this.availableTo,
-    this.image,
-    this.variations,
-    this.orderCount,
-  });
+  BestsellerProduct(
+      {this.id,
+      this.name,
+      this.sku,
+      this.categoryId,
+      this.categoryName,
+      this.isVeg,
+      this.menuStatus,
+      this.description,
+      this.price,
+      this.specialPrice,
+      this.availableFrom,
+      this.availableTo,
+      this.image,
+      this.variations,
+      this.orderCount,
+      this.cartPrice,
+      this.itemaddedtoCart});
 
   int? id;
   String? name;
@@ -116,16 +117,19 @@ class BestsellerProduct {
   String? isVeg;
   String? menuStatus;
   String? description;
-  String? price;
+  double? price;
   dynamic specialPrice;
   String? availableFrom;
   String? availableTo;
   String? image;
   List<BestsellerProductVariation>? variations;
   dynamic orderCount;
+  bool? itemaddedtoCart;
+  double? cartPrice;
 
   factory BestsellerProduct.fromJson(Map<String, dynamic> json) =>
       BestsellerProduct(
+        itemaddedtoCart: false,
         id: json["id"],
         name: json["name"],
         sku: json["sku"],
@@ -134,7 +138,8 @@ class BestsellerProduct {
         isVeg: json["is_veg"],
         menuStatus: json["menu_status"],
         description: json["description"],
-        price: json["price"],
+        price: double.parse(json["price"]),
+        cartPrice: double.parse(json["price"]),
         specialPrice: json["special_price"],
         availableFrom: json["available_from"],
         availableTo: json["available_to"],
@@ -143,7 +148,8 @@ class BestsellerProduct {
             ? null
             : List<BestsellerProductVariation>.from(json["variations"]
                 .map((x) => BestsellerProductVariation.fromJson(x))),
-        orderCount: json["order_count"],
+        // ignore: prefer_if_null_operators
+        orderCount: json["order_count"] == null ? '0' : json["order_count"],
       );
 
   Map<String, dynamic> toJson() => {

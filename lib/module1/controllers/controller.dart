@@ -44,16 +44,57 @@ class HomePageControler extends GetxController
     update();
   }
 
-  addtocart(BuildContext context, zxc.BestsellerProduct? data) {
-    showcartmesssage(context);
-    for (var item in cartdata!.productsList!) {
-      if (item.id == data!.id) {
-        showerrormesssage(context);
-      } else {
-        cartdata!.productsList!.add(data);
-        showcartmesssage(context);
+  itemincrementordecrement(zxc.BestsellerProduct data, String action) {
+    if (action == 'sub') {
+      var recdata = cartdata!.productsList!
+          .firstWhere((element) => element.id == data.id);
+
+      recdata.orderCount = recdata.orderCount - 1;
+      if (recdata.orderCount == 0) {
+        cartdata!.productsList!.remove(data);
       }
+      recdata.cartPrice = recdata.orderCount * recdata.price;
+      double sum = 0;
+      // ignore: unused_local_variable
+      for (var item in cartdata!.productsList!) {
+        sum += item.cartPrice!;
+      }
+      cartdata!.grandTotal = sum;
+
       update();
+    } else {
+      var recdata = cartdata!.productsList!
+          .firstWhere((element) => element.id == data.id);
+
+      recdata.orderCount = recdata.orderCount + 1;
+      recdata.cartPrice = recdata.orderCount * recdata.price;
+      double sum = 0;
+      // ignore: unused_local_variable
+      for (var item in cartdata!.productsList!) {
+        sum += item.cartPrice!;
+      }
+      cartdata!.grandTotal = sum;
+      update();
+    }
+  }
+
+  addtocart(BuildContext context, zxc.BestsellerProduct? data) {
+    // showcartmesssage(context);
+    if (data!.itemaddedtoCart == false) {
+      data.itemaddedtoCart = true;
+      data.orderCount = 1;
+
+      cartdata!.productsList!.add(data);
+      double sum = 0;
+      // ignore: unused_local_variable
+      for (var item in cartdata!.productsList!) {
+        sum += item.price!;
+      }
+      cartdata!.grandTotal = sum;
+
+      showcartmesssage(context);
+    } else {
+      showerrormesssage(context);
     }
   }
 
@@ -74,7 +115,8 @@ class HomePageControler extends GetxController
 
   showcartmesssage(BuildContext context) {
     final snackBar = SnackBar(
-      content: const Text('i items in cart costs :2229'),
+      content: Text(
+          '${cartdata!.productsList!.length} items in cart costs ${cartdata!.grandTotal}'),
       action: SnackBarAction(
         label: '  View Cart',
         textColor: Colors.white,
